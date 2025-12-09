@@ -12,7 +12,7 @@ if 'sim_angulo' not in st.session_state:
 if 'sim_altura0'  not in st.session_state:
     st.session_state.sim_altura0 = 0.0
     
-st.markdown("""Esta aplicación simula el movimiento parabolico (sin resistencia del aire) de un objeto. Ajusta los parametros en la barra lateral y presiona **Calcular** """)
+st.markdown("""Esta aplicación simula el movimiento parabolico (sin resistencia del aire) de un objeto. Ajusta los parametros en la barra lateral y presiona **Calcular Trayectoria** """)
 
 st.sidebar.header("Parametros")
 
@@ -21,11 +21,10 @@ input_angulogrados = st.sidebar.slider("Ángulo de Lanzamiento (°)", 0.0, 90.0,
 input_altura = st.sidebar.number_input("Altura Inicial (m)", 0.0, 100.0, 0.0)
 gravedad = 9.81
 
-if st.sidebar.button("Calcualar Trayectoria"):
+if st.sidebar.button("Calcular Trayectoria"):
     st.session_state.sim_velocidad0 = input_velocidad
     st.session_state.sim_angulo = input_angulogrados
     st.session_state.sim_altura0 = input_altura
-    st.success("¡Trayectoria Actualizada!")
 
 velocidad0 = st.session_state.sim_velocidad0
 angulo_grados = st.session_state.sim_angulo
@@ -37,42 +36,54 @@ vy = velocidad0 * np.sin(convGrados)
 
 discriminante = vy**2 + 2 * gravedad * altura0
 t_vuelo = (vy + np.sqrt(discriminante)) / gravedad
-t = np.linspace(0, t_vuelo, num=500)
+t = np.linspace(0, t_vuelo, num=100)
 x = vx * t
 y = altura0 + vy * t -0.5 * gravedad * t**2
-
-altura_maxima = np.max(y)
-distancia_maxima = x[-1]
-
-col1, col2, col3 = st.columns(3)
-col1.metric("Tiempo de Vuelo", f"{t_vuelo:.2f} s")
-col2.metric("Altura Máxima", f"{altura_maxima:.2f} m")
-col3.metric("Distancia Total", f"{distancia_maxima:.2f} m")
+distancia_max=x[-1]
 
 fig = go.Figure()
+
 fig.add_trace(go.Scatter(
-    x=x, 
-    y=y,
+    x=x, y=y,
     mode='lines',
-    name='Trayectoria',
-    line=dict(color='firebrick', width=4)
+    name='Camino',
+    line=dict(color='lightgrey', width=2, dash='dash')
 ))
 
 fig.add_trace(go.Scatter(
-    x=[x[0], x[-1]],
-    y=[y[0], y[-1]],
+    x=[x[0]], y=[y[0]],
     mode='markers',
-    name='Puntos Clave',
-    marker=dict(size=10, color='blue')
+    name='Proyectil',
+    marker=dict(color='red', size=15)
 ))
+
+frames = []
+
+for k in range(len(t)):
+    frames.append(go.Frame(
+        data=[go.Scatter(x=[x[k]], y=[y[k]])],
+        traces=[1],
+        name=str(k)
+    ))
+
+fig.frames = frames
 
 fig.update_layout(
-    title=f"Trayectoria (Velocidad={velocidad0} m/s, Ángulo={angulo_grados}°)",
-    xaxis_title="Distancia (m)",
-    yaxis_title="Altura (m)",
-    template="plotly_white",
+    title=f"Datos de la Trayectoria<br>Velocidad={velocidad0}m/s  Ángulo={angulo_grados}°  Distancia Total={distancia_max:.2f}m",
+    xaxis=dict(range=[0, max(x)*1.2], title="Distancia (m)"),
+    yaxis=dict(range=[0, max(y)*1.2], rangemode="nonnegative", title="Altura(m)", scaleanchor="x",scaleratio=1,constrain='domain'),
     height=600,
-    yaxis=dict(scaleanchor="x", scaleratio=1)
+    template="plotly_dark",
+    updatemenus=[dict(
+        type="buttons",
+        bgcolor="#2E86C1",
+        bordercolor="#1B4F72",
+        font=dict(family="Montserrat",color="black",size=12),
+        buttons=[dict(label="Reproducir",
+                      method="animate",
+                      args=[None, dict(frame=dict(duration=20, redraw=True),
+                                       fromcurrent=True)])]
+    )]
 )
 
 st.plotly_chart(fig, use_container_width=True)
