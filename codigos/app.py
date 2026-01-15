@@ -39,7 +39,7 @@ radio = st.sidebar.number_input("Radio (m)", 0.01, 5.0, value=params["r"], forma
 cd = st.sidebar.number_input("Coef. Arrastre (Cd)", 0.01, 1.0, value=params["cd"], disabled=bloquear_inputs)
 
 # --- Lógica Principal ---
-st.title("🚀 Simulador del Lanzamiento de la Trayectoria de un Proyectil")
+st.title("🚀 Simulador del Lanzamiento de un Proyectil")
 st.markdown("""
 Este simulador compara el modelo **ideal** (vacío) contra el modelo **real** (resistencia del aire).
 Útil para visualizar cómo la masa y la aerodinámica afectan el tiro.
