@@ -14,7 +14,7 @@ escenario = st.sidebar.selectbox(
     ["Personalizado", "Pelota de Ping Pong", "Bala de Cañón", "Balón de Fútbol"]
 )
 
-# Valores por defecto según escenario
+# Valores por defecto según escenario seleccionado
 defaults = {
     "Personalizado": {"m": 1.0, "r": 0.1, "cd": 0.47},
     "Pelota de Ping Pong": {"m": 0.0027, "r": 0.02, "cd": 0.5},
@@ -24,6 +24,8 @@ defaults = {
 
 params = defaults[escenario]
 
+bloquear_inputs = (escenario != "Personalizado")
+
 # Controles
 st.sidebar.markdown("---")
 st.sidebar.subheader("Parámetros de Lanzamiento")
@@ -32,9 +34,9 @@ angulo = st.sidebar.slider("Ángulo (°)", 0.0, 90.0, 45.0)
 h0 = st.sidebar.number_input("Altura Inicial (m)", 0.0, 100.0, 0.0)
 
 st.sidebar.subheader("Propiedades del Objeto")
-masa = st.sidebar.number_input("Masa (kg)", 0.001, 1000.0, params["m"], format="%.4f")
-radio = st.sidebar.number_input("Radio (m)", 0.01, 5.0, params["r"], format="%.2f")
-cd = st.sidebar.number_input("Coef. Arrastre (Cd)", 0.01, 1.0, params["cd"])
+masa = st.sidebar.number_input("Masa (kg)", 0.001, 1000.0, value=params["m"], format="%.4f", disabled=bloquear_inputs)
+radio = st.sidebar.number_input("Radio (m)", 0.01, 5.0, value=params["r"], format="%.2f", disabled=bloquear_inputs)
+cd = st.sidebar.number_input("Coef. Arrastre (Cd)", 0.01, 1.0, value=params["cd"], disabled=bloquear_inputs)
 
 # --- Lógica Principal ---
 st.title("🚀 Simulador del Lanzamiento de la Trayectoria de un Proyectil")
