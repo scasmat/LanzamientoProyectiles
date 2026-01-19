@@ -149,7 +149,7 @@ fig.update_layout(
             type="buttons",
             showactive=False,
             direction="left",
-            x=0.10, 
+            x=0.12, 
             y=1.15, 
             xanchor="left", 
             yanchor="top",
