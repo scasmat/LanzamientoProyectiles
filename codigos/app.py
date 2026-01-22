@@ -192,7 +192,7 @@ with st.expander("📚 Ver Explicación Matemática"):
                 
     2. Eje Vertizal ($y$):
     Aceleración constante por la gravedad ($g$). 
-    $$ y(t) = h_0 + v_0 \cdot \cdot t - \frac{1}{2} g t^2 $$
+    $$ y(t) = h_0 + v_0 \cdot t - \frac{1}{2} g t^2 $$
                 
     Donde:
     * $v_0$: Velocidad Inicial
