@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 import numpy as np
-import fisica  # Tu módulo de lógica
+import fisica
 
 st.set_page_config(page_title="Simulador Proyectiles Pro", layout="wide")
 
@@ -180,4 +180,32 @@ with st.expander("📚 Ver Explicación Matemática"):
     
     1. La bola **Real (Amarilla)** se frena por el aire, recorre menos distancia y toca el suelo antes.
     2. La bola **Ideal (Cian)** mantiene su velocidad horizontal constante, por lo que sigue volando más tiempo y llega más lejos.
+    
+                
+    **Modelo Ideal (Tiro Parabólico)**
+    
+    En el vacio, el movimiento se separa en dos ejes independientes:
+    
+    1. Eje Horizontal ($x$):
+    Velocidad constante (MRU). 
+    $$ x(t) = v_0 \cdot \cos(\theta) \cdot t $$
+                
+    2. Eje Vertizal ($y$):
+    Aceleración constante por la gravedad ($g$). 
+    $$ y(t) = h_0 + v_0 \cdot \sin(\theta) \cdot t - \frac{1}{2} g t^2 $$
+                
+    Donde:
+    * $v_0$: Velocidad Inicial
+    * $\theta$: Ángulo de lanzamiento
+    * $g$: Gravedad ($\approx 9.81 m/s^2$)
+    
+    **Modelo con Resistencia del Aire (Método de Euler)**
+    
+    A diferencia del modelo ideal, aquí consideramos la fuerza de arrastre $F_d$:
+    $$ F_d = \frac{1}{2} \rho v^2 C_d A $$
+    
+    Esto genera aceleraciones que cambian constantemente:
+    $$ a_x = - \frac{F_d \cos(\theta)}{m}, \quad a_y = -g - \frac{F_d \sin(\theta)}{m} $$
+    
+    Se resuelve iterativamente usando $\Delta t = 0.01s$.
     """)
